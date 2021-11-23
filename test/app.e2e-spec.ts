@@ -2,8 +2,8 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import { seedTestDatawithApp } from './../src/seedTestDatawithApp';
-import { startTestMango } from './../src/startTestMango';
+import { seedTestDatawithApp } from './../src/startup-config/seedTestDatawithApp';
+import { startTestMango } from './../src/startup-config/startTestMango';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

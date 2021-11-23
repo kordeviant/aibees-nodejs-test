@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
-import { startTestMango } from '../startTestMango';
+import { startTestMango } from '../startup-config/startTestMango';
 import { DiscountController } from './discount.controller';
 
 describe('DiscountController', () => {

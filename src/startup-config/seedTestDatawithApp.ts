@@ -1,4 +1,4 @@
-import { DiscountService } from './m-discount/discount.service';
+import { DiscountService } from './../m-discount/discount.service';
 
 export const seedTestDatawithApp = async (app) => {
   const disService = app.get(DiscountService);
