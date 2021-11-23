@@ -1,5 +1,7 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
+import { Role } from 'src/auth/role.enum';
+import { Roles } from 'src/auth/roles.decorator';
 import { DiscountService } from './discount.service';
 import { Cat } from './schemas/cat.schema';
 import { Product } from './schemas/product.schema';
@@ -9,6 +11,7 @@ export class DiscountController {
   constructor(private discountService: DiscountService) {}
 
   @Get('discount/:id')
+  @Roles(Role.Admin)
   @ApiParam({
     name: 'id',
     required: true,
