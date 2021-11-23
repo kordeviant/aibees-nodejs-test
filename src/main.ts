@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { AppModule } from './app.module';
+import { DiscountService } from './m-discount/discount.service';
 
 async function bootstrap() {
   const mongod = await MongoMemoryServer.create({
@@ -37,6 +38,47 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(3000);
-  // console.log(app);
+  // seeding database
+  const disService = app.get(DiscountService);
+  // create some categories
+  const categories = await Promise.all([
+    disService.createCat({
+      name: 'cat1',
+      discount: 10,
+    }),
+    disService.createCat({
+      name: 'cat2',
+      discount: 20,
+    }),
+    disService.createCat({
+      name: 'cat3',
+    }),
+  ]);
+  // cat3 has a parent now
+
+  await Promise.all([
+    (async () => {
+      const cat2 = await disService.getCatByName('cat2');
+      const cat3 = await disService.getCatByName('cat3');
+      cat3.parent_cat = cat2.id;
+      cat3.save();
+    })(),
+  ]);
+  // create some products
+  const products = await Promise.all([
+    disService.createProduct({
+      name: 'prod1',
+      discount: 2,
+      parent_cat: categories[0].id,
+    }),
+    disService.createProduct({
+      name: 'prod2',
+      parent_cat: categories[0].id,
+    }),
+    disService.createProduct({
+      name: 'prod3',
+      parent_cat: categories[2].id,
+    }),
+  ]);
 }
 bootstrap();

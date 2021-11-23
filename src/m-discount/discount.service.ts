@@ -6,6 +6,23 @@ import { CreateProdDto } from './dtos/create.prod.dto';
 import { Cat, CatDocument } from './schemas/cat.schema';
 import { Product, ProductDocument } from './schemas/product.schema';
 
+const retDiscount = (model: Model<any>) => {
+  return (x) => {
+    if (!x.discount && !x.parent_cat) {
+      return -1;
+    } else if (x.discount) {
+      return x.discount;
+    } else if (x.parent_cat) {
+      return model
+        .findById(x.parent_cat)
+        .then(retDiscount(model))
+        .catch((err) => -1);
+    } else {
+      return -1;
+    }
+  };
+};
+
 @Injectable()
 export class DiscountService {
   constructor(
@@ -14,21 +31,12 @@ export class DiscountService {
   ) {}
 
   async getDiscountProduct(prodId) {
-    const dis = await this.productModel.findById(prodId).exec();
-    if (dis.discount) {
-      return dis.discount;
-    } else {
-      return this.getDiscountCategory(dis.parent_cat);
-    }
+    return this.productModel
+      .findById(prodId)
+      .then(retDiscount(this.catModel))
+      .catch((e) => -1);
   }
-  async getDiscountCategory(catId) {
-    const dis = await this.catModel.findById(catId).exec();
-    if (dis.discount) {
-      return dis.discount;
-    } else {
-      return this.getDiscountCategory(dis.parent_cat);
-    }
-  }
+
   async createProduct(input: CreateProdDto): Promise<ProductDocument> {
     const created = new this.productModel(input);
     return created.save();
