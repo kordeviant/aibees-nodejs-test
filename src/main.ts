@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { seedTestDatawithApp } from './seedTestDatawithApp';
-import { startTestMango } from './startTestMango';
 import { addSwagger } from './startup-config/addSwagger';
+import { seedTestDatawithApp } from './startup-config/seedTestDatawithApp';
+import { startTestMango } from './startup-config/startTestMango';
 
 async function bootstrap() {
   // start testdb
