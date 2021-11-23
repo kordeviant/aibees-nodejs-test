@@ -12,10 +12,12 @@ import { DiscountModule } from './m-discount/discount.module';
   ],
   controllers: [],
   providers: [
+    // fake auth guard
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    // authorization guard
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
